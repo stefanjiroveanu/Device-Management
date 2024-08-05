@@ -1,0 +1,124 @@
+version: '3.1'
+services:
+
+  user_database:
+    image: postgres
+    build: 
+      context: ./server/user-service/database
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: appusers
+    volumes:
+      - ./server/user-service/pgdata:/var/lib/postgresql/data
+      - ./server/user-service/database/db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432" 
+    networks:
+      appnet:
+
+  device_database:
+    image: postgres
+    build:
+      context: ./server/device-service/database
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devices
+    volumes:
+      - ./server/device-service/pgdata:/var/lib/postgresql/data
+      - ./server/device-service/database/db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5434:5432"
+    networks:
+      appnet:
+
+  device_management_database:
+    image: postgres
+    build:
+      context: ./server/device-management-service/database
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devices
+    volumes:
+      - ./server/device-management-service/pgdata:/var/lib/postgresql/data
+      - ./server/device-management-service/database/db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5435:5432"
+    networks:
+      appnet:
+
+  frontend:
+    build: ./client
+    ports:
+      - 3000:3000
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.10
+
+  user-service:
+    build: ./server/user-service
+    depends_on:
+      - user_database
+    ports:
+      - 8080:8080
+    environment:
+      - ./server/user-service/.env
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.6
+
+  device_service:
+    build: ./server/device-service
+    ports:
+      - 8081:8081
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.7
+
+  device_management_service:
+    build: ./server/device-management-service
+    ports:
+      - 8082:8082
+      - 8083:8083
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.8
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.9
+
+  chat_service:
+    build: ./server/chat-service
+    ports:
+      - 8084:8084
+      - 8085:8085
+    networks:
+      appnet:
+        ipv4_address: 172.16.230.12
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+networks:
+    appnet:
+        ipam:
+            driver: default
+            config:
+            - subnet: "172.16.230.0/24"

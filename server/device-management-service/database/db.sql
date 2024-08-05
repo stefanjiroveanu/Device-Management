@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS DEVICES_VALUES (
+    id SERIAL PRIMARY KEY,
+    device_uuid VARCHAR(36) UNIQUE NOT NULL,
+    timestamp INT NOT NULL,
+    measurement_value FLOAT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS DEVICES (
+    id SERIAL PRIMARY KEY,
+    device_uuid VARCHAR(36) UNIQUE NOT NULL,
+    max_energy_consumption FLOAT NOT NULL,
+    owner_id VARCHAR(36) UNIQUE NOT NULL
+)
+
+ 

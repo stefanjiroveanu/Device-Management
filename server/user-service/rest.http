@@ -1,0 +1,23 @@
+
+POST http://localhost:8080/users/
+Content-Type: application/json
+
+{
+    "username" : "user7",
+    "password" : "user123",
+    "email": "sjiroveanu7@gmail.com",
+    "role" : "USER"
+}
+
+###GET User
+
+GET http://localhost:8080/users/
+
+###Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "username" : "whyareyounotworking",
+    "password" : "admin123"
+}

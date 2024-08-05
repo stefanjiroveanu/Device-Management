@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS DEVICES (
+    id SERIAL PRIMARY KEY,
+    uuid VARCHAR(36) UNIQUE NOT NULL,
+    device_address VARCHAR(256) UNIQUE NOT NULL,
+    device_description VARCHAR(255) UNIQUE NOT NULL,
+    max_energy_consumption FLOAT NOT NULL,
+    owner_id VARCHAR(36) NOT NULL
+);
+
+ALTER TABLE DEVICES ADD device_name VARCHAR(256) UNIQUE NOT NULL;

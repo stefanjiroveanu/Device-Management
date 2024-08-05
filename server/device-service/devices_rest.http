@@ -1,0 +1,15 @@
+POST http://localhost:8081/devices
+Content-Type: application/json
+
+{
+    "name": "frigider",
+    "address" : "address 1",
+    "description" : "description",
+    "maxEnergyConsumption": "100",
+    "userId": "1"
+}
+ 
+
+###
+
+GET http://localhost:8081/devices
